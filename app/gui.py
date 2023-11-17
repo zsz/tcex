@@ -130,7 +130,7 @@ class Controller:
 
     async def load_and_fill_table_names(self):
         loop = asyncio.get_event_loop()
-        loop.create_task(self.load_table_names("mydb", self.table_names_loaded))
+        loop.create_task(self.load_table_names(self.table.model.datasource.get_database(), self.table_names_loaded))
 
     async def load_table_content(self, table_names: list[str], callback: Callable[..., Any]):
         pub.subscribe(callback, "tables_content_loaded")
