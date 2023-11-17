@@ -10,6 +10,7 @@ HOST = "TCEX_HOSTNAME"
 USER = "TCEX_USERNAME"
 PASSWORD = "TCEX_PASSWORD"
 DATABASE = "TCEX_DATABASE"
+UNIX_SOCKET = "TCEX_UXSOCKET"
 
 
 class DataSource:
@@ -27,13 +28,21 @@ class DataSource:
 
     def get_database(self) -> str:
         return self.config[DATABASE]
-    
+
+    def get_unix_socket(self) -> str:
+        return self.config[UNIX_SOCKET]
+
     def get_connection(self) -> Connection:
+        connect_params = \
+            {"host": self.get_host(),
+             "user": self.get_user(),
+             "password": self.get_password(),
+             "database": self.get_database()}
+        if self.get_unix_socket() is not None:
+            connect_params["unix_socket"] = self.get_unix_socket()
+
         return connect(
-            host=self.get_host(),
-            user=self.get_user(),
-            password=self.get_password(),
-            database=self.get_database()
+            **connect_params
         )
 
 
